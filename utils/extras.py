@@ -37,10 +37,7 @@ EXTRAS = OrderedDict(
 )
 
 THEMES = [
-    'Material-Theme',
-    'Material-Theme-Darker',
-    'Material-Theme-Lighter',
-    'Material-Theme-Palenight'
+    'Material-Theme-Darker'
 ]
 
 

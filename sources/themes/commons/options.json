@@ -209,16 +209,7 @@
     "settings": ["material_theme_titlebar", "material_theme_contrast_mode"],
     "platforms": ["osx"],
     "fg": [<%= ui.foreground.primary.rgb %>],
-    "bg":
-      <% if (ui.variant.id == "darker") { %>
-        [26, 26, 26]
-      <% } else if (ui.variant.id == "lighter") { %>
-        [245, 245, 245]
-      <% } else if (ui.variant.id == "palenight") { %>
-        [33, 36, 50]
-      <% } else { %>
-        [30, 40, 45]
-      <% } %>
+    "bg": [26, 26, 26]
   },
 
   <% for (var i = 0; i < ui.accents.length; i++) { %>

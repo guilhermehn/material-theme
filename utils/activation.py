@@ -11,10 +11,7 @@ import functools
 NO_SELECTION = -1
 PREFERENCES = 'Preferences.sublime-settings'
 THEMES = [
-  'Material-Theme',
-  'Material-Theme-Palenight',
-  'Material-Theme-Darker',
-  'Material-Theme-Lighter'
+  'Material-Theme-Darker'
 ]
 
 
