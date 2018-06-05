@@ -13,7 +13,7 @@ import replace from 'gulp-replace';
 import _ from 'lodash';
 import common from '~/sources/settings/commons';
 
-var $ = require('gulp-load-plugins')();
+const $ = require('gulp-load-plugins')();
 
 gulp.task('build:schemes', ['clean:schemes'], cb => {
 	runSequence(
@@ -42,17 +42,11 @@ gulp.task('build:schemes', ['clean:schemes'], cb => {
 gulp.task('process:schemes', function() {
 	return gulp.src(`${paths.src}/settings/specific/*.json`).pipe(
 		$.flatmap((stream, file) => {
-			var basename = path.basename(file.path, path.extname(file.path));
+			const basename = path.basename(file.path, path.extname(file.path));
 
 			return gulp
 				.src(`${paths.src}/schemes/scheme.yml`)
-				.pipe(
-					$.data(() => {
-						var specific = require(file.path);
-
-						return _.merge(common, specific);
-					})
-				)
+				.pipe($.data(() => _.merge(common, require(file.path))))
 				.pipe($.template())
 				.pipe(
 					$.rename(scheme => {
@@ -64,8 +58,8 @@ gulp.task('process:schemes', function() {
 	);
 });
 
-gulp.task('convert:schemes', function() {
-	return gulp
+gulp.task('convert:schemes', () =>
+	gulp
 		.src(`${paths.schemes}/*.yml`)
 		.pipe(
 			$.plumber(error => {
@@ -81,26 +75,23 @@ gulp.task('convert:schemes', function() {
 			})
 		)
 		.pipe(
-			$.flatmap(stream => {
-				return (
-					stream
-						//.pipe($.exec('subl "<%= file.path %>" && subl --command "convert_file"'))
-						.pipe(
-							$.exec(
-								'subl "<%= file.path %>" && subl --command "convert_file" && subl --command "hide_panel"'
-							)
+			$.flatmap(stream =>
+				stream
+					.pipe(
+						$.exec(
+							'subl "<%= file.path %>" && subl --command "convert_file" && subl --command "hide_panel"'
 						)
-						.pipe($.exec.reporter())
-				);
-			})
-		);
-});
+					)
+					.pipe($.exec.reporter())
+			)
+		)
+);
 
 // Escape CDATA characters
-gulp.task('escape:schemes', () => {
-	return gulp
+gulp.task('escape:schemes', () =>
+	gulp
 		.src(`${paths.schemes}/*.tmTheme`)
 		.pipe(replace('&lt;', '<'))
 		.pipe(replace('&gt;', '>'))
-		.pipe(gulp.dest(paths.schemes));
-});
+		.pipe(gulp.dest(paths.schemes))
+);

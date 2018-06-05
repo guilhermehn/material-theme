@@ -11,10 +11,10 @@ import path from 'path';
 import _ from 'lodash';
 import common from '~/sources/settings/commons';
 
-var $ = require('gulp-load-plugins')();
+const $ = require('gulp-load-plugins')();
 
-gulp.task('build:themes', ['clean:themes'], () => {
-	return gulp
+gulp.task('build:themes', ['clean:themes'], () =>
+	gulp
 		.src(`${paths.src}/themes/*.json`)
 		.pipe(
 			$.plumber(error => {
@@ -28,11 +28,13 @@ gulp.task('build:themes', ['clean:themes'], () => {
 		)
 		.pipe($.include())
 		.pipe(
-			$.data(file => {
-				var specific = require('~/sources/settings/specific/' +
-					path.basename(file.path));
-				return _.merge(common, specific);
-			})
+			$.data(file =>
+				_.merge(
+					common,
+					require('~/sources/settings/specific/' +
+						path.basename(file.path))
+				)
+			)
 		)
 		.pipe($.template())
 		.pipe(
@@ -42,10 +44,10 @@ gulp.task('build:themes', ['clean:themes'], () => {
 			})
 		)
 		.pipe(gulp.dest('./'))
-		.on('end', () => {
+		.on('end', () =>
 			console.log(
 				'\n[build:themes]'.bold.magenta +
 					' Finished successfully \n'.bold.green
-			);
-		});
-});
+			)
+		)
+);

@@ -12,7 +12,7 @@ import runSequence from 'run-sequence';
 import _ from 'lodash';
 import common from '~/sources/settings/commons';
 
-var $ = require('gulp-load-plugins')();
+const $ = require('gulp-load-plugins')();
 
 gulp.task('build:widgets', ['clean:widgets'], cb => {
 	runSequence('build:widget-themes', 'build:widget-settings', error => {
@@ -33,20 +33,14 @@ gulp.task('build:widgets', ['clean:widgets'], cb => {
 	});
 });
 
-gulp.task('build:widget-themes', () => {
-	return gulp.src(`${paths.src}/settings/specific/*.json`).pipe(
+gulp.task('build:widget-themes', () =>
+	gulp.src(`${paths.src}/settings/specific/*.json`).pipe(
 		$.flatmap((stream, file) => {
-			var basename = path.basename(file.path, path.extname(file.path));
+			const basename = path.basename(file.path, path.extname(file.path));
 
 			return gulp
 				.src(`${paths.src}/widgets/widget.stTheme`)
-				.pipe(
-					$.data(function() {
-						var specific = require(file.path);
-
-						return _.merge(common, specific);
-					})
-				)
+				.pipe($.data(() => _.merge(common, require(file.path))))
 				.pipe($.template())
 				.pipe(
 					$.rename(widget => {
@@ -55,23 +49,17 @@ gulp.task('build:widget-themes', () => {
 				)
 				.pipe(gulp.dest(paths.widgets));
 		})
-	);
-});
+	)
+);
 
-gulp.task('build:widget-settings', function() {
-	return gulp.src(`${paths.src}/settings/specific/*.json`).pipe(
+gulp.task('build:widget-settings', () =>
+	gulp.src(`${paths.src}/settings/specific/*.json`).pipe(
 		$.flatmap((stream, file) => {
-			var basename = path.basename(file.path, path.extname(file.path));
+			const basename = path.basename(file.path, path.extname(file.path));
 
 			return gulp
 				.src(`${paths.src}/widgets/widget.sublime-settings`)
-				.pipe(
-					$.data(function() {
-						var specific = require(file.path);
-
-						return _.merge(common, specific);
-					})
-				)
+				.pipe($.data(() => _.merge(common, require(file.path))))
 				.pipe($.template())
 				.pipe(
 					$.rename(widget => {
@@ -80,5 +68,5 @@ gulp.task('build:widget-settings', function() {
 				)
 				.pipe(gulp.dest(paths.widgets));
 		})
-	);
-});
+	)
+);
